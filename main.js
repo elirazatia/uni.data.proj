@@ -5,7 +5,8 @@
     Object.defineProperty(window[moduleName], 'handleGenerate', {
         writable: false,
         value: (type) => {
-            alert('Clicked generate button')
+            const response = generator.generate('bar', [{ key: 'F', value: 14 }])
+            console.log('response', response)
         }
     })
 })()
