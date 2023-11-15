@@ -26,7 +26,9 @@
     <div class="flex flex-col items-center justify-center h-screen">
         <div id="body-template" class="w-96 h-96 bg-red-200"></div>
         <button class="btn btn-primary" onclick="handler.handleGenerate()">Generate</button>
-        <input type="file" onchange="json.fromFile(this)" />
+        <input 
+            type="file" 
+            onchange="handler.handle(this)"
     </div>
 </body>
 </html>

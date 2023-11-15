@@ -26,7 +26,6 @@ const ERROR_INVALID_CHARTTYPE = 'No valid chartType passed'
             if (!isValid(chartType)) return new Error(ERROR_INVALID_CHARTTYPE)
             try {
                 node = charts[chartType].call(rawData)
-                console.log(charts[chartType].call)
             } catch(resultingError) { error = resultingError }
             if (!node) error = new Error(ERROR_INVALID_CHARTTYPE) // Call Error API
             if (error) return error
