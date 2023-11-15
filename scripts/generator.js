@@ -5,27 +5,32 @@ const ERROR_INVALID_CHARTTYPE = 'No valid chartType passed'
     const moduleName = 'generator'
     window[moduleName] = {}
 
+    const charts = {
+        'bar': {
+            call: (data) => generator.generateBarChart(data),
+            description: '',
+            schema: {
+                'key': String,
+                'value': Number
+            },
+        },
+    }
+    const isValid = (type) => Object.keys(charts).includes(type)
+
     Object.defineProperty(window[moduleName], 'generate', {
         writable: false,
         value: (chartType, rawData) => {
             let node
             let error
 
+            if (!isValid(chartType)) return new Error(ERROR_INVALID_CHARTTYPE)
             try {
-                switch(chartType) {
-                case 'bar':
-                    node = generator.generateBarChart(rawData)
-                    break
-                case 'line':
-                    break
-                case 'donut':
-                    break
-                }
+                node = charts[chartType].call(rawData)
+                console.log(charts[chartType].call)
             } catch(resultingError) { error = resultingError }
-
             if (!node) error = new Error(ERROR_INVALID_CHARTTYPE) // Call Error API
-
             if (error) return error
+
             return (parentNode) => {
                 const existingChildren = Array.from(parentNode.children)
                 if (existingChildren.length != 0) existingChildren.forEach(child => child.remove())
