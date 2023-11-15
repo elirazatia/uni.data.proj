@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="main.js"></script>
     <script src="scripts/generator.js"></script>
+    <script src="scripts/json.js"></script>
 
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -25,6 +26,7 @@
     <div class="flex flex-col items-center justify-center h-screen">
         <div id="body-template" class="w-96 h-96 bg-red-200"></div>
         <button class="btn btn-primary" onclick="handler.handleGenerate()">Generate</button>
+        <input type="file" onchange="json.fromFile(this)" />
     </div>
 </body>
 </html>
