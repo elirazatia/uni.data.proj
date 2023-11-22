@@ -23,12 +23,138 @@
     <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 </head>
 <body>
-    <div class="flex flex-col items-center justify-center h-screen">
-        <div id="body-template" class="w-96 h-96 bg-red-200"></div>
+    <div class="flex items-center justify-center h-screen text-white">
+        <div class="bg-[#0F0F0F] w-96 p-6 pr-6 h-full flex flex-col">
+            <!-- The Sidebar -->
+            <div class="sidebar-timeline-item">
+                <div class="sidebar-timeline-item__divider"></div>
+                <div class="sidebar-timeline-item__indicator"><span>1</span></div>
+                <div class="sidebar-timeline-item__content">
+                    <h4>Import A File</h4>
+                    <p>Importer un document pour fait un nouvelle diagramme</p>
+                    <button>Import</button>
+                    <input
+                        style="display: none;"
+                        type="file"
+                        onchange="handler.handle(this)"
+                        />
+                </div>
+            </div>
+
+            <div class="sidebar-timeline-item">
+                <div class="sidebar-timeline-item__divider"></div>
+                <div class="sidebar-timeline-item__indicator"><span>2</span></div>
+                <div class="sidebar-timeline-item__content">
+                    <h4>Chart Type</h4>
+                    <p>Importer un document pour fait un nouvelle diagramme</p>
+                    <button>Perform</button>
+                </div>
+            </div>
+
+            <div class="sidebar-timeline-item">
+                <div class="sidebar-timeline-item__divider"></div>
+                <div class="sidebar-timeline-item__indicator"><span>3</span></div>
+                <div class="sidebar-timeline-item__content">
+                    <h4>Import A File</h4>
+                    <p>Importer un document pour fait un nouvelle diagramme</p>
+                    <button>Perform</button>
+                </div>
+            </div>
+
+            <div class="flex-grow"></div>
+
+            <div>Text</div>
+            <div>Image</div>
+        </div>
+        <div class="bg-[#040404] flex-grow h-full flex flex-col">
+            <!-- The Canvas -->
+            <ul class="the-toolbar">
+                <li>
+                    Playground
+                    <div class="li__active"></div>
+                </li>
+            </ul>
+            <div class="flex-grow">
+                
+            </div>
+        </div>
+        <!-- <div id="body-template" class="w-96 h-96 bg-red-200"></div>
         <button class="btn btn-primary" onclick="handler.handleGenerate()">Generate</button>
         <input 
             type="file" 
-            onchange="handler.handle(this)"
+            onchange="handler.handle(this)" -->
     </div>
+
+    <style>
+        .the-toolbar {
+            padding-top: 2em;
+            padding-left: 1em;
+            border-bottom: 1px solid white;
+            display: flex;
+        }
+
+        .the-toolbar li {
+            position: relative;
+            font-size: 0.85em;
+            padding-bottom: 0.5em;
+        }
+
+        .the-toolbar li .li__active {
+            position: absolute;
+            left: 0;
+            bottom: -1px;
+            width: 100%;
+            height: 2px;
+            background-color: green;
+        }
+    </style>
+
+    <style>
+        .sidebar-timeline-item {
+            position: relative;
+            display: flex;
+        }
+
+        .sidebar-timeline-item__divider {
+            position: absolute;
+            top: 2em;
+            left: 1em;
+            height: calc(100% - 2em);
+
+            width: 1px;
+            background-color: white;
+        }
+
+        .sidebar-timeline-item__indicator {
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 1em;
+            width: 2em;
+            height: 2em;
+
+            border: 1px solid white;
+        }
+
+        .sidebar-timeline-item__content {
+            padding-left: 2em;
+        }
+        
+        .sidebar-timeline-item h4 { font-size: 1.25em; }
+        .sidebar-timeline-item p { font-size: 0.85em; opacity: 0.8; }
+
+        .sidebar-timeline-item button, .sidebar-timeline-item input {
+            max-width: 8em;
+            display: block;
+            margin-top: 0.35em;
+            padding: 0.5em;
+            
+            background-color: rgba(255,255,255,0.05);
+            border-radius: 0.5em;
+            font-size: 0.85em;
+        }
+    </style>
 </body>
 </html>
