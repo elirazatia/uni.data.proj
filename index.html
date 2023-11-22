@@ -8,9 +8,9 @@
     <meta name="description" content="An empty university project">
 
     <link rel="stylesheet" href="style.css">
-    <script src="main.js"></script>
-    <script src="scripts/generator.js"></script>
-    <script src="scripts/json.js"></script>
+    <script defer src="main.js"></script>
+    <script defer src="scripts/generator.js"></script>
+    <script defer src="scripts/json.js"></script>
 
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -23,42 +23,54 @@
     <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 </head>
 <body>
+    <!-- Global File Upload -->
+    <input
+        style="display: none"
+        type="file"
+        onchange="handler.handle(this)"
+    />
+
+    <!-- The Layout -->
     <div class="flex items-center justify-center h-screen text-white">
         <div class="bg-[#0F0F0F] w-96 p-6 pr-6 h-full flex flex-col">
             <!-- The Sidebar -->
-            <div class="sidebar-timeline-item">
+            <div class="sidebar-timeline-item" order="1">
                 <div class="sidebar-timeline-item__divider"></div>
                 <div class="sidebar-timeline-item__indicator"><span>1</span></div>
                 <div class="sidebar-timeline-item__content">
                     <h4>Import A File</h4>
-                    <p>Importer un document pour fait un nouvelle diagramme</p>
-                    <button>Import</button>
-                    <input
-                        style="display: none;"
-                        type="file"
-                        onchange="handler.handle(this)"
-                        />
+                    <p>
+                        Importer un document pour fait un nouvelle diagramme
+                        <button onclick="handler.import()">Import</button>
+                    </p>
                 </div>
             </div>
 
-            <div class="sidebar-timeline-item">
+            <div class="sidebar-timeline-item" order="2">
                 <div class="sidebar-timeline-item__divider"></div>
                 <div class="sidebar-timeline-item__indicator"><span>2</span></div>
                 <div class="sidebar-timeline-item__content">
                     <h4>Chart Type</h4>
-                    <p>Importer un document pour fait un nouvelle diagramme</p>
-                    <button>Perform</button>
+                    <p>
+                        <button onclick="handler.chooseChart(0)">Bar</button>
+                        <button onclick="handler.chooseChart(1)">Line</button>
+                        <button onclick="handler.chooseChart(2)">Donut</button>
+                    </p>
                 </div>
             </div>
 
-            <div class="sidebar-timeline-item">
+            <div class="sidebar-timeline-item" order="3">
                 <div class="sidebar-timeline-item__divider"></div>
                 <div class="sidebar-timeline-item__indicator"><span>3</span></div>
                 <div class="sidebar-timeline-item__content">
                     <h4>Import A File</h4>
                     <p>Importer un document pour fait un nouvelle diagramme</p>
-                    <button>Perform</button>
+                    <button onclick="handler.confirmChart()">Create</button>
                 </div>
+            </div>
+
+            <div class="sidebar-timeline-item" order="3">
+                <div class="sidebar-timeline-item__indicator"></div>
             </div>
 
             <div class="flex-grow"></div>
@@ -74,15 +86,16 @@
                     <div class="li__active"></div>
                 </li>
             </ul>
-            <div class="flex-grow">
-                
+            <div class="flex-grow relative">
+                <!-- The Canvas Content -->
+                <div class="z-8 w-64 h-48 outline outline-2 outline-offset-2 outline-red-400 absolute top-16 left-14">
+                    <div class="cursor-move absolute w-12 h-12 bg-red-400 left-[50%] bottom-[-0.5em] rounded-full" style="transform: translate(-50%, 100%);"></div>
+                </div>
+                <div class="w-64 h-48 bg-red-200 absolute top-16 left-14 rounded-md">
+                    Chart Content...
+                </div>
             </div>
         </div>
-        <!-- <div id="body-template" class="w-96 h-96 bg-red-200"></div>
-        <button class="btn btn-primary" onclick="handler.handleGenerate()">Generate</button>
-        <input 
-            type="file" 
-            onchange="handler.handle(this)" -->
     </div>
 
     <style>
@@ -122,7 +135,7 @@
             height: calc(100% - 2em);
 
             width: 1px;
-            background-color: white;
+            background-color: rgba(255, 255, 255, 0.6);
         }
 
         .sidebar-timeline-item__indicator {
@@ -135,20 +148,22 @@
             width: 2em;
             height: 2em;
 
-            border: 1px solid white;
+            border: 1px solid rgba(255, 255, 255, 0.6);
         }
 
         .sidebar-timeline-item__content {
-            padding-left: 2em;
+            padding-left: 1.25em;
+            padding-top: 0.5em;
+            padding-bottom: 2em;
         }
         
-        .sidebar-timeline-item h4 { font-size: 1.25em; }
-        .sidebar-timeline-item p { font-size: 0.85em; opacity: 0.8; }
+        .sidebar-timeline-item h4 { font-size: 1.25em; text-transform: uppercase; font-size: 1em; font-weight: 600; }
+        .sidebar-timeline-item p { font-size: 0.85em; opacity: 0.75; margin-top: 0.25em; margin-bottom: 0.45em; }
 
-        .sidebar-timeline-item button, .sidebar-timeline-item input {
+        .sidebar-timeline-item button {
+            margin-top: 0.75em;
             max-width: 8em;
             display: block;
-            margin-top: 0.35em;
             padding: 0.5em;
             
             background-color: rgba(255,255,255,0.05);
