@@ -19,9 +19,8 @@
         .sort((a, b) => a.getAttribute('order') - b.getAttribute('order'))
     const setActiveChartStageUIUntil = (index) => createChartStagesUI.forEach(element => {
         const order = parseInt(element.getAttribute('order'))
-        console.log('order', order)
         if (!order) return
-        if (order <= index) {
+        if (order == index) {
             element.style.opacity = 1
             element.style.pointerEvents = 'unset'
         } else {
@@ -81,6 +80,7 @@
         writable: false,
         value: () => {
             console.log('should confirm chart')
+            setActiveChartStageUIUntil(1)
         }
     })
 })()
