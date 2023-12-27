@@ -33,7 +33,6 @@
     setActiveChartStageUIUntil(1)
 
     // Define functions
-
     Object.defineProperty(window[moduleName], 'simulateFileUpload', {
         writable: false,
         value: () => {
