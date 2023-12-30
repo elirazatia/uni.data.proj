@@ -8,12 +8,13 @@ const ERROR_INVALID_CHARTTYPE = 'No valid chartType passed'
     const charts = {
         'bar': {
             call: (data) => generator.generateBarChart(data),
-            description: '',
-            schema: {
+            //description: '',
+            /*schema: {
                 'key': String,
                 'value': Number
-            },
-        },
+            },*/
+        }
+        // TODO: Continue by adding bar and line chart when inserting
     }
     const isValid = (type) => Object.keys(charts).includes(type)
 

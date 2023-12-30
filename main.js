@@ -6,6 +6,7 @@
     // General Memory Values
     let mostRecentUpload
     let mostRecentUploadWaiter
+    let newChartTypeIndex
     const setRecentUpload = (content) => {
         mostRecentUpload = content
         mostRecentUploadWaiter?.call(content)
@@ -46,11 +47,6 @@
             const fileResponse = await json.fromFile(input)
             if (fileResponse instanceof Error) return console.error('Handled with error', fileResponse)
             setRecentUpload(fileResponse)
-            // generatorResponse = generator.generate('bar', fileResponse)
-            // if (generatorResponse instanceof Error) return console.error(generatorResponse)
-            // generatorResponse(
-            //     document.querySelector('#body-template')
-            // )
         }
     })
 
@@ -70,7 +66,7 @@
     Object.defineProperty(window[moduleName], 'chooseChart', {
         writable: false,
         value: (index) => {
-            console.log('create chart with index of', index)
+            newChartTypeIndex = index
             setActiveChartStageUIUntil(3)
         }
     })
@@ -79,6 +75,30 @@
         writable: false,
         value: () => {
             console.log('should confirm chart')
+            generatorResponse = generator.generate('bar', mostRecentUpload)
+            if (generatorResponse instanceof Error) return console.error(generatorResponse)
+
+            const newChartElement = document.createElement('div')
+            document.querySelector('#chart-template').appendChild(newChartElement)
+            // TODO: Add wrapper; Drag and delete buttons
+            newChartElement.classList.add('z-8')
+            newChartElement.classList.add('w-64')
+            newChartElement.classList.add('absolute')
+            generatorResponse(
+                newChartElement  
+            ) 
+
+            setActiveChartStageUIUntil(1)
+        }
+    })
+
+    // TODO: Add 'Cancel Chart' button
+    Object.defineProperty(window[moduleName], 'cancelChart', {
+        writable: false,
+        value: () => {
+            mostRecentUpload = null
+            mostRecentUploadWaiter = null
+
             setActiveChartStageUIUntil(1)
         }
     })
