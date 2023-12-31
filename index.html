@@ -93,11 +93,18 @@
                     <h4>Confirm Import</h4>
                     <p>
                         Create
-                        <button
-                            onclick="handler.confirmChart()"
-                            class="flex items-center rounded-lg bg-secondary px-2 py-2 text-xs font-medium text-white">
-                            Confirm
-                        </button>
+                        <div class="flex gap-x-2 gap-y-2">
+                            <button
+                                onclick="handler.confirmChart()"
+                                class="flex items-center rounded-lg bg-secondary px-2 py-2 text-xs font-medium text-white">
+                                Confirm
+                            </button>
+                            <button
+                                onclick="handler.cancelChart()"
+                                class="flex items-center rounded-lg bg-secondary px-2 py-2 text-xs font-medium text-white">
+                                Cancel
+                            </button>
+                        </div>
                     </p>
                 </div>
             </div>

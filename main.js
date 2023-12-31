@@ -6,7 +6,7 @@
     // General Memory Values
     let mostRecentUpload
     let mostRecentUploadWaiter
-    let newChartTypeIndex
+    let newChartTypeKey
     const setRecentUpload = (content) => {
         mostRecentUpload = content
         mostRecentUploadWaiter?.call(content)
@@ -65,8 +65,8 @@
 
     Object.defineProperty(window[moduleName], 'chooseChart', {
         writable: false,
-        value: (index) => {
-            newChartTypeIndex = index
+        value: (key) => {
+            newChartTypeKey = key
             setActiveChartStageUIUntil(3)
         }
     })
@@ -74,8 +74,8 @@
     Object.defineProperty(window[moduleName], 'confirmChart', {
         writable: false,
         value: () => {
-            console.log('should confirm chart')
-            generatorResponse = generator.generate('bar', mostRecentUpload)
+            console.log('should confirm chart', newChartTypeKey)
+            generatorResponse = generator.generate(newChartTypeKey, mostRecentUpload)
             if (generatorResponse instanceof Error) return console.error(generatorResponse)
 
             const newChartElement = document.createElement('div')
@@ -92,7 +92,6 @@
         }
     })
 
-    // TODO: Add 'Cancel Chart' button
     Object.defineProperty(window[moduleName], 'cancelChart', {
         writable: false,
         value: () => {
