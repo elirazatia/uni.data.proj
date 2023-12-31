@@ -74,7 +74,6 @@
     Object.defineProperty(window[moduleName], 'confirmChart', {
         writable: false,
         value: () => {
-            console.log('should confirm chart', newChartTypeKey)
             generatorResponse = generator.generate(newChartTypeKey, mostRecentUpload)
             if (generatorResponse instanceof Error) return console.error(generatorResponse)
 

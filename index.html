@@ -116,15 +116,18 @@
             <div class="flex-grow"></div>
 
             <ul class="w-full">
+                <!-- TODO: These should call through the handler module; And wraped in a function that allows drag and drop -->
                 <li
-                  class="flex items-center w-full border-b-2 border-neutral-800 border-opacity-100 py-2">
-                  <i class='bx bx-text mr-2'></i>
-                  Text
+                    onclick="generator.generateText()"
+                    class="flex items-center w-full border-b-2 border-neutral-800 border-opacity-100 py-2">
+                    <i class='bx bx-text mr-2'></i>
+                    Text
                 </li>
                 <li
-                  class="flex items-center w-full border-b-2 border-neutral-800 border-opacity-100 py-2">
-                  <i class='bx bx-image mr-2'></i>
-                  Image
+                    onclick="generator.generateImage()"
+                    class="flex items-center w-full border-b-2 border-neutral-800 border-opacity-100 py-2">
+                    <i class='bx bx-image mr-2'></i>
+                    Image
                 </li>
             </ul>
         </div>

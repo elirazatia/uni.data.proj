@@ -40,6 +40,27 @@ const ERROR_INVALID_CHARTTYPE = 'No valid chartType passed'
         }
     })
 
+    Object.defineProperty(window[moduleName], 'generateText', {
+        writable: false,
+        value: () => {
+            let label = prompt("Enter text for the label...")
+            if (!label) return
+
+            console.log('create label with :', label)
+        }
+    })
+
+    Object.defineProperty(window[moduleName], 'generateImage', {
+        writable: false,
+        value: () => {
+            let imageUrl = prompt("URL for image")
+            if (!imageUrl) return
+
+            console.log('create image with :', imageUrl)
+
+        }
+    })
+
     Object.defineProperty(window[moduleName], 'generateBarChart', {
         writable: false,
         value: (data) => {
