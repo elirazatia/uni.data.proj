@@ -16,8 +16,17 @@ const ERROR_INVALID_CHARTTYPE = 'No valid chartType passed'
             call: (data) => generator.generateLineChart(data),
         },
     }
-    const isValid = (type) => Object.keys(charts).includes(type)
 
+    // Utility
+    const isValid = (type) => Object.keys(charts).includes(type)
+    const makeAppendingCallback = (theNode) => (parentNode) => {
+        const existingChildren = Array.from(parentNode.children)
+        if (existingChildren.length != 0) existingChildren.forEach(child => child.remove())
+
+        parentNode.appendChild(theNode)
+    }
+
+    // Define functions
     Object.defineProperty(window[moduleName], 'generate', {
         writable: false,
         value: (chartType, rawData) => {
@@ -31,33 +40,32 @@ const ERROR_INVALID_CHARTTYPE = 'No valid chartType passed'
             if (!node) error = new Error(ERROR_INVALID_CHARTTYPE) // Call Error API
             if (error) return error
 
-            return (parentNode) => {
-                const existingChildren = Array.from(parentNode.children)
-                if (existingChildren.length != 0) existingChildren.forEach(child => child.remove())
-
-                parentNode.appendChild(node)
-            }
+            return makeAppendingCallback(node)
         }
     })
 
     Object.defineProperty(window[moduleName], 'generateText', {
         writable: false,
         value: () => {
-            let label = prompt("Enter text for the label...")
-            if (!label) return
+            let labelText = prompt("Label text")
+            if (!labelText) return
 
-            console.log('create label with :', label)
+            const newLabel = document.createElement('span')
+            newLabel.innerText = labelText
+            return makeAppendingCallback(newLabel)
         }
     })
 
     Object.defineProperty(window[moduleName], 'generateImage', {
         writable: false,
         value: () => {
-            let imageUrl = prompt("URL for image")
+            let imageUrl = prompt("Image Url")
             if (!imageUrl) return
 
-            console.log('create image with :', imageUrl)
-
+            const newImage = document.createElement('img')
+            newImage.src = imageUrl
+            newImage.style = '-webkit-user-drag: none'
+            return makeAppendingCallback(newImage)
         }
     })
 

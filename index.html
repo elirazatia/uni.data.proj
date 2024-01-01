@@ -11,6 +11,7 @@
     <script defer src="main.js"></script>
     <script defer src="scripts/generator.js"></script>
     <script defer src="scripts/json.js"></script>
+    <script defer src="scripts/drag.js"></script>
 
     <!-- Boxicons -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -118,13 +119,13 @@
             <ul class="w-full">
                 <!-- TODO: These should call through the handler module; And wraped in a function that allows drag and drop -->
                 <li
-                    onclick="generator.generateText()"
+                    onclick="handler.chooseFigure('text')"
                     class="flex items-center w-full border-b-2 border-neutral-800 border-opacity-100 py-2">
                     <i class='bx bx-text mr-2'></i>
                     Text
                 </li>
                 <li
-                    onclick="generator.generateImage()"
+                    onclick="handler.chooseFigure('image')"
                     class="flex items-center w-full border-b-2 border-neutral-800 border-opacity-100 py-2">
                     <i class='bx bx-image mr-2'></i>
                     Image
@@ -141,25 +142,10 @@
           </ul>
 
           <div id="chart-template" class="flex-grow relative">
-                <div class="absolute top-0 left-0 w-full h-full"
+                <div style="pointer-events: node;" class="absolute top-0 left-0 w-full h-full"
                     style="filter: contrast(0.8); 
                         background-image: url('./assets/bg.jpeg');
                         background-size: 5em;">
-                </div> 
-
-                <!-- The Canvas Content -->
-                <div class="z-8 w-64 h-48 outline outline-2 outline-offset-2 outline-red-400 absolute top-16 left-14">
-                    <div
-                        class="flex items-center justify-center absolute px-3 h-12 bg-red-400 left-[50%] bottom-[-0.5em] rounded-full"
-                        style="transform: translate(-50%, 100%);">
-                        <i class='cursor-move text-xl bx bxs-hand'></i>
-                        <div class="mx-3 w-px h-4 bg-white"></div>
-                        <i class='cursor-pointer text-xl mr-2 bx bxs-trash-alt'></i>
-                        <i class='cursor-pointer text-xl bx bx-list-ul'></i>
-                    </div>
-                </div>
-                <div class="w-64 h-48 bg-red-200 absolute top-16 left-14 rounded-md">
-                    Chart Content...
                 </div>
             </div>
         </div>

@@ -16,6 +16,32 @@
         mostRecentUploadWaiter = callback
     }
 
+    // Utility
+    const makeDraggerWrappable = () => {
+        const wrapper = document.createElement('div')
+        document.querySelector('#chart-template').appendChild(wrapper)
+        // TODO: Add wrapper; Drag and delete buttons
+        wrapper.classList.add('select-none')
+        wrapper.classList.add('z-8')
+        wrapper.classList.add('w-64')
+        wrapper.classList.add('absolute')
+        wrapper.classList.add('__can-drag')
+        wrapper.classList.add('cursor-grab')
+        wrapper.style.left = 0
+        wrapper.style.top = 0
+
+        wrapper.addEventListener('contextmenu', (event) => {
+            event.stopImmediatePropagation()
+            event.preventDefault()
+
+            const confirmDelete = confirm("Delete?")
+            if (confirmDelete) {
+                wrapper.remove()
+            }
+        })
+        return wrapper
+    }
+
     let createChartStagesUI = [...document.querySelectorAll('.sidebar-timeline-item')]
         .sort((a, b) => a.getAttribute('order') - b.getAttribute('order'))
     const setActiveChartStageUIUntil = (index) => createChartStagesUI.forEach(element => {
@@ -63,6 +89,26 @@
         }
     })
 
+    Object.defineProperty(window[moduleName], 'chooseFigure', {
+        writable: false,
+        value: (key) => {
+            let figureResponse
+            switch (key) {
+                case 'text':
+                    figureResponse = generator.generateText()
+                    break
+                case 'image':
+                    figureResponse = generator.generateImage()
+                    break
+                default: return
+            }
+
+            if (!figureResponse) return console.info('Cancelled insert! Nothing to insert.')
+            draggableWrapper = makeDraggerWrappable()
+            figureResponse(draggableWrapper)
+        }
+    })
+
     Object.defineProperty(window[moduleName], 'chooseChart', {
         writable: false,
         value: (key) => {
@@ -77,15 +123,8 @@
             generatorResponse = generator.generate(newChartTypeKey, mostRecentUpload)
             if (generatorResponse instanceof Error) return console.error(generatorResponse)
 
-            const newChartElement = document.createElement('div')
-            document.querySelector('#chart-template').appendChild(newChartElement)
-            // TODO: Add wrapper; Drag and delete buttons
-            newChartElement.classList.add('z-8')
-            newChartElement.classList.add('w-64')
-            newChartElement.classList.add('absolute')
-            generatorResponse(
-                newChartElement  
-            ) 
+            draggableWrapper = makeDraggerWrappable()
+            generatorResponse(draggableWrapper)
 
             setActiveChartStageUIUntil(1)
         }
