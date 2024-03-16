@@ -17,10 +17,14 @@
     }
 
     // Utility
-    const makeDraggerWrappable = () => {
+    const makeDraggerWrappable = (storeIntoWorkspace) => {
         const wrapper = document.createElement('div')
         document.querySelector('#chart-template').appendChild(wrapper)
+
         // TODO: Add wrapper; Drag and delete buttons
+        const id = Math.random().toString().slice(3, 7)
+
+        wrapper.id = id
         wrapper.classList.add('select-none')
         wrapper.classList.add('z-8')
         wrapper.classList.add('w-64')
@@ -37,8 +41,19 @@
             const confirmDelete = confirm("Delete?")
             if (confirmDelete) {
                 wrapper.remove()
+                workspace.removeStorageItem(id)
             }
         })
+
+        if (storeIntoWorkspace) {
+            workspace.setStorageItemAttrs(
+                id, 
+                {
+                    size: { w: 64, h: 12 },
+                    position: { x: 0, y: 0 }
+                })
+        }
+
         return wrapper
     }
 
@@ -104,7 +119,7 @@
             }
 
             if (!figureResponse) return console.info('Cancelled insert! Nothing to insert.')
-            draggableWrapper = makeDraggerWrappable()
+            draggableWrapper = makeDraggerWrappable(true)
             figureResponse(draggableWrapper)
         }
     })
@@ -123,7 +138,7 @@
             generatorResponse = generator.generate(newChartTypeKey, mostRecentUpload)
             if (generatorResponse instanceof Error) return console.error(generatorResponse)
 
-            draggableWrapper = makeDraggerWrappable()
+            draggableWrapper = makeDraggerWrappable(true)
             generatorResponse(draggableWrapper)
 
             setActiveChartStageUIUntil(1)

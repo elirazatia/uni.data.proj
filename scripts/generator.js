@@ -19,11 +19,16 @@ const ERROR_INVALID_CHARTTYPE = 'No valid chartType passed'
 
     // Utility
     const isValid = (type) => Object.keys(charts).includes(type)
-    const makeAppendingCallback = (theNode) => (parentNode) => {
+    const makeAppendingCallback = (theNode, persistencyAttrs = {}) => (parentNode) => {
+        // 1. Remove existing children
         const existingChildren = Array.from(parentNode.children)
         if (existingChildren.length != 0) existingChildren.forEach(child => child.remove())
 
+        // 2. Add the new wrapped node
         parentNode.appendChild(theNode)
+
+        // 3. Set any final storage data for persistency
+        workspace.setStorageItemAttrs(parentNode.id, persistencyAttrs)
     }
 
     // Define functions
@@ -40,7 +45,10 @@ const ERROR_INVALID_CHARTTYPE = 'No valid chartType passed'
             if (!node) error = new Error(ERROR_INVALID_CHARTTYPE) // Call Error API
             if (error) return error
 
-            return makeAppendingCallback(node)
+            return makeAppendingCallback(
+                node,
+                { type: chartType, rawData: rawData }
+            )
         }
     })
 
@@ -52,7 +60,10 @@ const ERROR_INVALID_CHARTTYPE = 'No valid chartType passed'
 
             const newLabel = document.createElement('span')
             newLabel.innerText = labelText
-            return makeAppendingCallback(newLabel)
+            return makeAppendingCallback(
+                newLabel,
+                { label: labelText }
+            )
         }
     })
 
@@ -65,7 +76,10 @@ const ERROR_INVALID_CHARTTYPE = 'No valid chartType passed'
             const newImage = document.createElement('img')
             newImage.src = imageUrl
             newImage.style = '-webkit-user-drag: none'
-            return makeAppendingCallback(newImage)
+            return makeAppendingCallback(
+                newImage,
+                { src: imageUrl }
+            )
         }
     })
 

@@ -7,13 +7,15 @@
     let dragStartX
     let dragStartY
 
+    let targetX
+    let targetY
+
     const mousedown = (event) => {
         dragStartX = event.clientX
         dragStartY = event.clientY
 
         let n = event.target
         while (n != document.body && !dragNode) {
-            console.log(n.classList)
             if (n.classList.contains('__can-drag')) {
                 dragNode = n
                 const styleMap = dragNode.computedStyleMap()
@@ -23,10 +25,6 @@
                 n = n.parentElement
             }
         }
-
-        if (n != dragNode) {
-            console.log('hover element is invalid', n)
-        }
     }
     const mousemove = (event) => {
         if (!dragNode) return
@@ -35,17 +33,31 @@
         const currentY = event.clientY
         const offsetX = currentX - dragStartX
         const offsetY = currentY - dragStartY
+        
+        targetX = offsetX + nodeStartX + 'px'
+        targetY = offsetY + nodeStartY + 'px'
 
-        console.log('is dragging', offsetX, offsetY, dragStartX)
-        dragNode.style.left = (offsetX + nodeStartX) + 'px'
-        dragNode.style.top = (offsetY + nodeStartY) + 'px'
+        dragNode.style.left = targetX
+        dragNode.style.top = targetY
     }
     const release = () => {
+        if (dragNode) {
+            workspace.setStorageItemAttrs(
+                dragNode.id,
+                { position: {
+                    x: targetX,
+                    y: targetY
+                }}
+            )
+        }
+
         dragNode = null
         dragStartX = null
         dragStartY = null
         nodeStartX = null
         nodeStartY = null
+        targetX = null
+        targetY = null
     }
 
     document.addEventListener('mousedown', mousedown)
