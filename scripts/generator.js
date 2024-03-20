@@ -27,16 +27,19 @@ const ERROR_INVALID_CHARTTYPE = 'No valid chartType passed'
         // 2. Add the new wrapped node
         parentNode.appendChild(theNode)
 
-        // 3. Set any final storage data for persistency
+        // 3. Set any final storage data for persistency - If it is newly created
         workspace.setStorageItemAttrs(parentNode.id, persistencyAttrs)
     }
 
     // Define functions
     Object.defineProperty(window[moduleName], 'generate', {
         writable: false,
-        value: (chartType, rawData) => {
+        value: (chartType, rawData, existingConfigure) => {
             let node
             let error
+
+            chartType = existingConfigure?.type || chartType
+            rawData = existingConfigure?.rawData || rawData
 
             if (!isValid(chartType)) return new Error(ERROR_INVALID_CHARTTYPE)
             try {
@@ -47,30 +50,30 @@ const ERROR_INVALID_CHARTTYPE = 'No valid chartType passed'
 
             return makeAppendingCallback(
                 node,
-                { type: chartType, rawData: rawData }
+                { type: chartType, rawData: rawData },
             )
         }
     })
 
     Object.defineProperty(window[moduleName], 'generateText', {
         writable: false,
-        value: () => {
-            let labelText = prompt("Label text")
+        value: (existingConfigure) => {
+            let labelText = existingConfigure?.label ?? prompt("Label text")
             if (!labelText) return
 
             const newLabel = document.createElement('span')
             newLabel.innerText = labelText
             return makeAppendingCallback(
                 newLabel,
-                { label: labelText }
+                { label: labelText },
             )
         }
     })
 
     Object.defineProperty(window[moduleName], 'generateImage', {
         writable: false,
-        value: () => {
-            let imageUrl = prompt("Image Url")
+        value: (existingConfigure) => {
+            let imageUrl = existingConfigure?.src ?? prompt("Image Url") // TODO: Must replace this with the above implementation
             if (!imageUrl) return
 
             const newImage = document.createElement('img')
@@ -78,7 +81,7 @@ const ERROR_INVALID_CHARTTYPE = 'No valid chartType passed'
             newImage.style = '-webkit-user-drag: none'
             return makeAppendingCallback(
                 newImage,
-                { src: imageUrl }
+                { src: imageUrl },
             )
         }
     })

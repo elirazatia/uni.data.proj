@@ -17,12 +17,12 @@
     }
 
     // Utility
-    const makeDraggerWrappable = (storeIntoWorkspace) => {
+    const makeDraggerWrappable = (existingID) => {
         const wrapper = document.createElement('div')
         document.querySelector('#chart-template').appendChild(wrapper)
 
         // TODO: Add wrapper; Drag and delete buttons
-        const id = Math.random().toString().slice(3, 7)
+        const id = existingID ?? Math.random().toString().slice(3, 7)
 
         wrapper.id = id
         wrapper.classList.add('select-none')
@@ -45,14 +45,14 @@
             }
         })
 
-        if (storeIntoWorkspace) {
-            workspace.setStorageItemAttrs(
-                id, 
-                {
-                    size: { w: 64, h: 12 },
-                    position: { x: 0, y: 0 }
-                })
-        }
+        workspace.setStorageItemAttrs(
+            id, 
+            {
+                size: { w: 64, h: 12 },
+                position: { x: 0, y: 0 },
+            },
+            true
+        )
 
         return wrapper
     }
@@ -72,20 +72,49 @@
     })
 
     // On App Bootup
-    setActiveChartStageUIUntil(1)
-    console.info('Your name', workspace.username)
-    if (!workspace.username) {
-        const attemptPrompt = () => {
-            const theNewUsername = prompt('Hey, what is your name? (Min 3 chars)')
-            if (!theNewUsername || theNewUsername.length < 3) return attemptPrompt()
+    // Delay all initial bootup functions to ensure that everything is prepared
+    setTimeout(() => {
 
-            workspace.username = theNewUsername
+        // 1. Correctly configure the UI
+        setActiveChartStageUIUntil(1)
+
+        // 2. Get the users name
+        if (!workspace.username) {
+            const attemptPrompt = () => {
+                const theNewUsername = prompt('Hey, what is your name? (Min 3 chars)')
+                if (!theNewUsername || theNewUsername.length < 3) return attemptPrompt()
+    
+                workspace.username = theNewUsername
+            }
+    
+            attemptPrompt()
         }
 
-        attemptPrompt()
-    }
+        // 3. Load from storage
+        workspace.fetchStorage()
+    }, 10)
 
     // Define functions
+    Object.defineProperty(window[moduleName], 'generateStoredFigure', {
+        writable: false,
+        value: (id, configuration) => {
+            let newEl;
+            if (configuration.rawData && configuration.type) {
+                newEl = generator.generate(null, null, configuration)
+            } else if (configuration.label) {
+                newEl = generator.generateText(configuration)
+            } else if (configuration.src) {
+                newEl = generator.generateImage(configuration)
+            }
+
+            draggableWrapper = makeDraggerWrappable(id)
+            newEl(draggableWrapper)
+
+            draggableWrapper.style.top = configuration?.position?.y || '0px'
+            draggableWrapper.style.left = configuration?.position?.x || '0px'
+        }
+    })
+
     Object.defineProperty(window[moduleName], 'simulateFileUpload', {
         writable: false,
         value: () => {
@@ -130,7 +159,7 @@
             }
 
             if (!figureResponse) return console.info('Cancelled insert! Nothing to insert.')
-            draggableWrapper = makeDraggerWrappable(true)
+            draggableWrapper = makeDraggerWrappable()
             figureResponse(draggableWrapper)
         }
     })
@@ -149,7 +178,7 @@
             generatorResponse = generator.generate(newChartTypeKey, mostRecentUpload)
             if (generatorResponse instanceof Error) return console.error(generatorResponse)
 
-            draggableWrapper = makeDraggerWrappable(true)
+            draggableWrapper = makeDraggerWrappable()
             generatorResponse(draggableWrapper)
 
             setActiveChartStageUIUntil(1)

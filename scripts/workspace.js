@@ -7,6 +7,7 @@ const WORKSPACE_LOCALSTORAGE_KEY = 'workspace'
 const NAME_LOCALSTORAGE_KEY = 'name'
 
 const NAME_LABEL_FORMAT = (name) => 'Hello, ' + name
+let isInitingStorage = false
 
 ;(function() {
     const moduleName = 'workspace'
@@ -25,7 +26,9 @@ const NAME_LABEL_FORMAT = (name) => 'Hello, ' + name
         },
         set(newName) { 
             if (typeof newName !== 'string') return
+            
             localStorage.setItem(NAME_LOCALSTORAGE_KEY, newName) ?? null
+            document.querySelector('#user-name').innerText = NAME_LABEL_FORMAT(newName)
         }
     })
 
@@ -34,8 +37,7 @@ const NAME_LABEL_FORMAT = (name) => 'Hello, ' + name
         try {
             const itemsString = localStorage.getItem(WORKSPACE_LOCALSTORAGE_KEY)
             const itemsObject = JSON.parse(itemsString)
-            items = itemsObject
-            console.log('items')
+            items = itemsObject || {}
         } catch(error) {
             items = {}
             console.info('Something went wrong while fetching your storage!')
@@ -51,22 +53,20 @@ const NAME_LABEL_FORMAT = (name) => 'Hello, ' + name
     Object.defineProperty(window[moduleName], 'fetchStorage', {
         writable: false,
         value: () => {
-            // 1. Fetch the storage
+            // 1. Set initingStorage to true
+            isInitingStorage = true
+
+            // 2. Fetch the storage
             fetchStorage()
 
-            // 2. Run over each item and insert them
+            // 3. Run over each item and insert them
             Object.keys(items).forEach(itemId => {
                 const itemAttrs = items[itemId]
-
-                // 3. Do whatever you need to with each item and attribute
-                if (itemAttrs.rawData && itemAttrs.type) {
-                    alert('Create chart')
-                } else if (itemAttrs.label) {
-                    alert('Create label')
-                } else if (itemAttrs.src) {
-                    alert('Create image from attribute')
-                }
+                handler.generateStoredFigure(itemId, itemAttrs)
             })
+
+            // 4. Set initingStorage to false to allow new entries
+            isInitingStorage = false
         }
     })
 
@@ -83,6 +83,7 @@ const NAME_LABEL_FORMAT = (name) => 'Hello, ' + name
     Object.defineProperty(window[moduleName], 'setStorageItemAttrs', {
         writable: false,
         value: (id, attrs) => {
+            if (isInitingStorage) return
             if (typeof id !== 'string') return console.error(ERROR_INVALID_ID)
             if (typeof attrs !== 'object') return console.error(ERROR_INVALID_ATTRIBUTES)
 
