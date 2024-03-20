@@ -53,27 +53,6 @@ const WORKSPACE_LOCALSTORAGE_KEY = 'workspace'
         }
     })
 
-    // Object.defineProperty(window[moduleName], 'addStoreItem', {
-    //     writable: false,
-    //     value: (id, position, size) => {
-    //         if (typeof id !== 'string') return console.error(ERROR_INVALID_ID)
-
-    //         if (typeof newPosition?.x !== 'string' ||
-    //             typeof newPosition?.y !== 'string') return console.error(ERROR_INVALID_POSITION)
-
-    //         if (typeof size?.w !== 'string' ||
-    //             typeof size?.h !== 'string') return console.error(ERROR_INVALID_SIZE)
-            
-    //         items[id] = {
-    //             ...(items[id] || {}),
-    //             position,
-    //             size
-    //         }
-        
-    //         setStorage()
-    //     }
-    // })
-
     Object.defineProperty(window[moduleName], 'removeStorageItem', {
         writable: false,
         value: (id) => {
@@ -83,18 +62,6 @@ const WORKSPACE_LOCALSTORAGE_KEY = 'workspace'
             setStorage()
         }
     })
-
-    // Object.defineProperty(window[moduleName], 'setStorageItemPosition', {
-    //     writable: false,
-    //     value: (id, newPosition) => {
-    //         if (typeof newPosition?.x !== 'string' ||
-    //             typeof newPosition?.y !== 'string') return console.error(ERROR_INVALID_POSITION)
-    //         items[id] = {
-    //             position, size
-    //         }
-    //         setStorage()
-    //     }
-    // })
 
     Object.defineProperty(window[moduleName], 'setStorageItemAttrs', {
         writable: false,
