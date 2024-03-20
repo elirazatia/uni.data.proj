@@ -4,6 +4,9 @@ const ERROR_INVALID_SIZE = 'No valid chartType passed'
 const ERROR_INVALID_ATTRIBUTES = ''
 
 const WORKSPACE_LOCALSTORAGE_KEY = 'workspace'
+const NAME_LOCALSTORAGE_KEY = 'name'
+
+const NAME_LABEL_FORMAT = (name) => 'Hello, ' + name
 
 ;(function() {
     const moduleName = 'workspace'
@@ -11,6 +14,20 @@ const WORKSPACE_LOCALSTORAGE_KEY = 'workspace'
 
     // The Workspace
     let items = {}
+
+    Object.defineProperty(window[moduleName], 'username', {
+        get() {
+            // Not best practice; But update name label; defer tag on scripts means this file won't run until the DOM is rendered
+            const theName = localStorage.getItem(NAME_LOCALSTORAGE_KEY) ?? null
+
+            document.querySelector('#user-name').innerText = NAME_LABEL_FORMAT(theName)
+            return theName
+        },
+        set(newName) { 
+            if (typeof newName !== 'string') return
+            localStorage.setItem(NAME_LOCALSTORAGE_KEY, newName) ?? null
+        }
+    })
 
     // Utility methods
     const fetchStorage = () => {

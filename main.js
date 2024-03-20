@@ -73,6 +73,17 @@
 
     // On App Bootup
     setActiveChartStageUIUntil(1)
+    console.info('Your name', workspace.username)
+    if (!workspace.username) {
+        const attemptPrompt = () => {
+            const theNewUsername = prompt('Hey, what is your name? (Min 3 chars)')
+            if (!theNewUsername || theNewUsername.length < 3) return attemptPrompt()
+
+            workspace.username = theNewUsername
+        }
+
+        attemptPrompt()
+    }
 
     // Define functions
     Object.defineProperty(window[moduleName], 'simulateFileUpload', {
