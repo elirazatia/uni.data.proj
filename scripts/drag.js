@@ -10,6 +10,16 @@
     let targetX
     let targetY
 
+    const determineHighestZIndex = (moveElement) => {
+        const canvas = document.querySelector('#the-canvas')
+        if (!canvas)
+            return console.info('No canvas element found. This an internal problem.')
+
+        const parentElement = moveElement.parentElement
+        moveElement.remove()
+        parentElement.appendChild(moveElement)
+    }
+
     const mousedown = (event) => {
         dragStartX = event.clientX
         dragStartY = event.clientY
@@ -21,6 +31,8 @@
                 const styleMap = dragNode.computedStyleMap()
                 nodeStartX = parseFloat(styleMap.get('left')?.value || 0)
                 nodeStartY = parseFloat(styleMap.get('top')?.value || 0)
+
+                determineHighestZIndex(dragNode)
             } else {
                 n = n.parentElement
             }
