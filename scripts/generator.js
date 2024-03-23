@@ -45,7 +45,7 @@ const ERROR_INVALID_CHARTTYPE = 'No valid chartType passed'
             try {
                 node = charts[chartType].call(rawData)
             } catch(resultingError) { error = resultingError; console.error('Generating chart resulted in error: ', resultingError) }
-            if (!node) error = new Error(ERROR_INVALID_CHARTTYPE) // Call Error API
+            if (!node) error = new Error(ERROR_INVALID_CHARTTYPE)
             if (error) return error
 
             return makeAppendingCallback(
@@ -73,7 +73,8 @@ const ERROR_INVALID_CHARTTYPE = 'No valid chartType passed'
     Object.defineProperty(window[moduleName], 'generateImage', {
         writable: false,
         value: (existingConfigure) => {
-            let imageUrl = existingConfigure?.src ?? prompt("Image Url") // TODO: Must replace this with the above implementation
+            console.log(existingConfigure)
+            let imageUrl = existingConfigure?.src ?? prompt("Image Url")
             if (!imageUrl) return
 
             const newImage = document.createElement('img')

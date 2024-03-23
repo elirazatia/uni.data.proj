@@ -7,9 +7,13 @@
     let mostRecentUpload
     let mostRecentUploadWaiter
     let newChartTypeKey
+    const clearRecentUpload = () => {
+        mostRecentUpload = null
+        mostRecentUploadWaiter = null
+    }
     const setRecentUpload = (content) => {
         mostRecentUpload = content
-        mostRecentUploadWaiter?.call(content)
+        mostRecentUploadWaiter(content)
     }
     const getRecentUpload = (callback) => {
         if (mostRecentUpload) callback(mostRecentUpload)
@@ -21,7 +25,6 @@
         const wrapper = document.createElement('div')
         document.querySelector('#chart-template').appendChild(wrapper)
 
-        // TODO: Add wrapper; Drag and delete buttons
         const id = existingID ?? Math.random().toString().slice(3, 7)
 
         wrapper.id = id
@@ -33,6 +36,44 @@
         wrapper.classList.add('cursor-grab')
         wrapper.style.left = 0
         wrapper.style.top = 0
+
+        wrapper.addEventListener('figureClick', async (e) => {
+            const itemAttrs = workspace.items
+            let staticAttributes = JSON.parse(
+                JSON.stringify(itemAttrs[id]))
+
+            const dataHasUpdated = () => {
+                try { 
+                    const element = handler.generateStoredFigure(id, staticAttributes, true) // Call .generateStoredFigures() first as it may fail with bad data, and will catch() rather than ruin the data integrity
+                    workspace.setStorageItemAttrs(id, staticAttributes)
+                    element(wrapper)
+                } catch(error) {
+                    alert('Failed to update with new data : ' + error.message)
+                }    
+            }
+
+            switch(window[moduleName].determineConfigurationFigureType(staticAttributes)) {
+                case FIGURE_TYPE_CHART:
+                    clearRecentUpload()
+                    getRecentUpload((data) => {
+                        staticAttributes.rawData = data
+                        dataHasUpdated()
+                    })
+
+                    await window[moduleName].simulateFileUpload()
+                    break
+                case FIGURE_TYPE_TEXT:
+                    let newLabel = prompt("Label text", staticAttributes.label)
+                    staticAttributes.label = newLabel
+                    dataHasUpdated()
+                    break
+                case FIGURE_TYPE_IMAGE:
+                    let newImageUrl = prompt("Image Url", staticAttributes.src)
+                    staticAttributes.src = newImageUrl
+                    dataHasUpdated()
+                    break
+            }
+        })
 
         wrapper.addEventListener('contextmenu', (event) => {
             event.stopImmediatePropagation()
@@ -95,17 +136,35 @@
     }, 10)
 
     // Define functions
+    const FIGURE_TYPE_CHART = 2
+    const FIGURE_TYPE_TEXT = 3
+    const FIGURE_TYPE_IMAGE = 4
+    Object.defineProperty(window[moduleName], 'determineConfigurationFigureType', {
+        writable: false,
+        value: (configuration) => {
+            if (configuration.rawData && configuration.type) return FIGURE_TYPE_CHART
+            else if (configuration.label) return FIGURE_TYPE_TEXT
+            else if (configuration.src) return FIGURE_TYPE_IMAGE
+        }
+    })
     Object.defineProperty(window[moduleName], 'generateStoredFigure', {
         writable: false,
-        value: (id, configuration) => {
+        value: (id, configuration, dontPlaceIntoCanvas) => {
             let newEl;
-            if (configuration.rawData && configuration.type) {
-                newEl = generator.generate(null, null, configuration)
-            } else if (configuration.label) {
-                newEl = generator.generateText(configuration)
-            } else if (configuration.src) {
-                newEl = generator.generateImage(configuration)
+            switch(window[moduleName].determineConfigurationFigureType(configuration)) {
+                case FIGURE_TYPE_CHART:
+                    newEl = generator.generate(null, null, configuration)
+                    break
+                case FIGURE_TYPE_TEXT:
+                    newEl = generator.generateText(configuration)
+                    break
+                case FIGURE_TYPE_IMAGE:
+                    newEl = generator.generateImage(configuration)
+                    break
             }
+
+            if (dontPlaceIntoCanvas)
+                return newEl
 
             draggableWrapper = makeDraggerWrappable(id)
             newEl(draggableWrapper)
@@ -125,7 +184,9 @@
     Object.defineProperty(window[moduleName], 'handle', {
         writable: false,
         value: async (input) => {
+            console.log('thze input')
             const fileResponse = await json.fromFile(input)
+            console.log(fileResponse)
             if (fileResponse instanceof Error) return console.error('Handled with error', fileResponse)
             setRecentUpload(fileResponse)
         }

@@ -16,22 +16,6 @@ let isInitingStorage = false
     // The Workspace
     let items = {}
 
-    Object.defineProperty(window[moduleName], 'username', {
-        get() {
-            // Not best practice; But update name label; defer tag on scripts means this file won't run until the DOM is rendered
-            const theName = localStorage.getItem(NAME_LOCALSTORAGE_KEY) ?? null
-
-            document.querySelector('#user-name').innerText = NAME_LABEL_FORMAT(theName)
-            return theName
-        },
-        set(newName) { 
-            if (typeof newName !== 'string') return
-            
-            localStorage.setItem(NAME_LOCALSTORAGE_KEY, newName) ?? null
-            document.querySelector('#user-name').innerText = NAME_LABEL_FORMAT(newName)
-        }
-    })
-
     // Utility methods
     const fetchStorage = () => {
         try {
@@ -48,6 +32,27 @@ let isInitingStorage = false
             WORKSPACE_LOCALSTORAGE_KEY,
             JSON.stringify(items))
     }
+    
+    // Global Getters
+    Object.defineProperty(window[moduleName], 'items', {
+        get() { return items }
+    })
+
+    Object.defineProperty(window[moduleName], 'username', {
+        get() {
+            // Not best practice; But update name label; defer tag on scripts means this file won't run until the DOM is rendered
+            const theName = localStorage.getItem(NAME_LOCALSTORAGE_KEY) ?? null
+
+            document.querySelector('#user-name').innerText = NAME_LABEL_FORMAT(theName)
+            return theName
+        },
+        set(newName) { 
+            if (typeof newName !== 'string') return
+            
+            localStorage.setItem(NAME_LOCALSTORAGE_KEY, newName) ?? null
+            document.querySelector('#user-name').innerText = NAME_LABEL_FORMAT(newName)
+        }
+    })
 
     // Define functions
     Object.defineProperty(window[moduleName], 'fetchStorage', {

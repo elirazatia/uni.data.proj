@@ -1,4 +1,5 @@
 ;(function() {
+    const canvasElement = document.querySelector('#chart-template')
     let dragNode
 
     let nodeStartX
@@ -52,8 +53,11 @@
         dragNode.style.left = targetX
         dragNode.style.top = targetY
     }
-    const release = () => {
-        if (dragNode) {
+    const release = (event) => {
+        const hasMouseMoved = 
+            (targetX != null && targetY != null)
+
+        if (dragNode && hasMouseMoved) {
             workspace.setStorageItemAttrs(
                 dragNode.id,
                 { position: {
@@ -61,6 +65,11 @@
                     y: targetY
                 }}
             )
+        } 
+        
+        if (!hasMouseMoved) {
+            dragNode?.dispatchEvent(new Event('figureClick'))
+            event.stopImmediatePropagation()
         }
 
         dragNode = null
@@ -72,7 +81,8 @@
         targetY = null
     }
 
-    document.addEventListener('mousedown', mousedown)
-    document.addEventListener('mousemove', mousemove)
+    canvasElement.addEventListener('mousedown', mousedown)
+    canvasElement.addEventListener('mousemove', mousemove)
+    
     document.addEventListener('mouseup', release)
 })()
