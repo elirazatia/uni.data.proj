@@ -144,6 +144,19 @@
         }
     })
 
+    Object.defineProperty(window[moduleName], 'toggleHighlighter', {
+        writable: false,
+        value: () => {
+            let isToggled = highlight.toggleHighlighter()
+            const highlightTool = document.querySelector('#highlight-selector')
+            if (!highlightTool) return
+
+            const className = 'scale-125'
+            if (isToggled) highlightTool.classList.add(className)
+            else highlightTool.classList.remove(className)
+        }
+    })
+
     Object.defineProperty(window[moduleName], 'chooseFigure', {
         writable: false,
         value: (key) => {

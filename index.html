@@ -11,6 +11,7 @@
     <script defer src="scripts/workspace.js"></script>
     <script defer src="main.js"></script>
     <script defer src="scripts/generator.js"></script>
+    <script defer src="scripts/highlight.js"></script>
     <script defer src="scripts/json.js"></script>
     <script defer src="scripts/drag.js"></script>
 
@@ -118,7 +119,6 @@
             <div class="flex-grow"></div>
 
             <ul class="w-full">
-                <!-- TODO: These should call through the handler module; And wraped in a function that allows drag and drop -->
                 <li
                     onclick="handler.chooseFigure('text')"
                     class="flex items-center w-full border-b-2 border-neutral-800 border-opacity-100 py-2">
@@ -133,20 +133,27 @@
                 </li>
             </ul>
         </div>
-        <div id="the-canvas" class="bg-[#040404] flex-grow h-full flex flex-col">
+        <div id="the-canvas" class="bg-[#040404] flex-grow h-full flex flex-col relative">
             <!-- The Canvas -->
             <ul class="flex list-none flex-row flex-wrap border-b-0 pl-0">
                 <li role="presentation" te-nav-active>
                     <a id="user-name" class="block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium uppercase leading-tight hover:isolate hover:border-transparent hover:bg-gray-900  border-primary text-blue-400">Hello, New User</a>
                 </li>
             </ul>
-          </ul>
 
-          <div id="chart-template" class="flex-grow relative">
+            <div id="chart-template" class="flex-grow relative">
                 <div style="pointer-events: node;" class="absolute top-0 left-0 w-full h-full"
                     style="filter: contrast(0.8); 
                         background-image: url('./assets/bg.jpeg');
                         background-size: 5em;">
+                </div>
+            </div>
+
+            <canvas style="opacity: 0.6; pointer-events: none;" id="canvas-pen" width="1500" height="1500" class="absolute top-0 left-0 w-[1500px] h-[1500px]"></canvas>
+
+            <div id="highlight-selector" class="flex list-none flex-col gap-y-2 absolute bottom-4 left-4">
+                <div onclick="handler.toggleHighlighter()" class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center">
+                    <i class='bx bx-highlight text-black text-2xl'></i>
                 </div>
             </div>
         </div>
