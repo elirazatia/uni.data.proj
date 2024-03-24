@@ -11,39 +11,51 @@
     let isMouseDown = false
     let arcs = []
     let previousXY = null
-    
+
     // Configure the Canvas - Ensure it exists and is in the scene
     if (highlightCanvas) {
+        // 1. Get the canvas context and configure the rendering
         context = highlightCanvas.getContext("2d")
+        context.strokeStyle = 'rgba(200, 200, 50)'
+        context.lineWidth = 12
 
-        const mouseIsDown = () => {
+        // 2. Assign all events
+        const mouseIsUp = () => {
             isMouseDown = false
             previousXY = null
+            workspace.arcs = arcs
         }
-        highlightCanvas.addEventListener('mouseup', mouseIsDown)
-        highlightCanvas.addEventListener('mouseleave', mouseIsDown)
-
-        highlightCanvas.addEventListener('mousedown', () => (isMouseDown = true))
-
+        const mouseIsDown = () => {
+            isMouseDown = true
+            arcs.push([])            
+        }
+        highlightCanvas.addEventListener('mouseup', mouseIsUp)
+        highlightCanvas.addEventListener('mouseleave', mouseIsUp)
+        highlightCanvas.addEventListener('mousedown', mouseIsDown)
         highlightCanvas.addEventListener('mousemove', (e) => {
-            if (!isHighlighting) return
-            if (!isMouseDown) return
-        
-            if (previousXY) {
+            if (!isHighlighting || !isMouseDown) return
+            if (previousXY &&
+                    (previousXY[0] != e.layerX || previousXY[1] != e.layerY)) {
                 context.lineTo(e.layerX, e.layerY);
                 context.stroke();
-                arcs.push([e.layerX, e.layerY])
-            } else {
-                context.strokeStyle = 'rgba(200, 200, 50)'
-                context.lineWidth = 12
+                arcs[arcs.length - 1].push([e.layerX, e.layerY])
+            } else if (!previousXY) {
                 context.moveTo(e.layerX, e.layerY);
-                arcs.push([e.layerX, e.layerY])
+                arcs[arcs.length - 1].push([e.layerX, e.layerY])
             }
 
-            previousXY = [
-                e.layerX,
-                e.layerY
-            ]
+            previousXY = [e.layerX, e.layerY ]
+        })
+
+        // 3. Configure previous sessions config from localStorage
+        const storedArcs = workspace.arcs
+        arcs = storedArcs
+        arcs.forEach(arcSet => {
+            context.moveTo(arcSet[0][0], arcSet[1][1]);
+            arcSet.slice(1).forEach(arcPoint => {
+                context.lineTo(arcPoint[0], arcPoint[1])
+                context.stroke()
+            })
         })
     } else {
         console.error('The Canvas has never been initialized! Please force refresh.')

@@ -5,6 +5,7 @@ const ERROR_INVALID_ATTRIBUTES = ''
 
 const WORKSPACE_LOCALSTORAGE_KEY = 'workspace'
 const NAME_LOCALSTORAGE_KEY = 'name'
+const NAME_LOCALSTORAGE_ARCS = 'arcs'
 
 const NAME_LABEL_FORMAT = (name) => 'Hello, ' + name
 let isInitingStorage = false
@@ -42,8 +43,8 @@ let isInitingStorage = false
         get() {
             // Not best practice; But update name label; defer tag on scripts means this file won't run until the DOM is rendered
             const theName = localStorage.getItem(NAME_LOCALSTORAGE_KEY) ?? null
-
             document.querySelector('#user-name').innerText = NAME_LABEL_FORMAT(theName)
+
             return theName
         },
         set(newName) { 
@@ -51,6 +52,24 @@ let isInitingStorage = false
             
             localStorage.setItem(NAME_LOCALSTORAGE_KEY, newName) ?? null
             document.querySelector('#user-name').innerText = NAME_LABEL_FORMAT(newName)
+        }
+    })
+
+    Object.defineProperty(window[moduleName], 'arcs', {
+        get() {
+            let items = localStorage.getItem(NAME_LOCALSTORAGE_ARCS) ?? ''
+            try {
+                return JSON.parse(items)
+            } catch {
+                return []
+            }
+        },
+        set(newArcs) {
+            if (!Array.isArray(newArcs)) return
+
+            const arcs = newArcs
+                .filter(arr => arr?.length > 0)
+            localStorage.setItem(NAME_LOCALSTORAGE_ARCS, JSON.stringify(arcs)) ?? null
         }
     })
 
