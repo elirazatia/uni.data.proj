@@ -168,6 +168,17 @@
         }
     })
 
+    Object.defineProperty(window[moduleName], 'clearWorkspace', {
+        writable: false,
+        value: async (input) => {
+            const willContinue = confirm("Are you sure you want to clear your workspace? This cannot be undone.")
+            if (!willContinue) return
+            
+            localStorage.clear()
+            location.reload()
+        }
+    })
+
     Object.defineProperty(window[moduleName], 'simulateFileUpload', {
         writable: false,
         value: () => {
