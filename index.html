@@ -118,31 +118,33 @@
 
             <div class="flex-grow"></div>
 
-            <ul class="w-full">
-                <li
-                    onclick="handler.chooseFigure('text')"
-                    class="flex items-center w-full border-b-2 border-neutral-800 border-opacity-100 py-2">
-                    <i class='bx bx-text mr-2'></i>
-                    Text
-                </li>
-                <li
-                    onclick="handler.chooseFigure('image')"
-                    class="flex items-center w-full border-b-2 border-neutral-800 border-opacity-100 py-2">
-                    <i class='bx bx-image mr-2'></i>
-                    Image
-                </li>
+            <ul class="w-full flex flex-col">
+                <button onclick="handler.chooseFigure('text')">
+                    <li
+                        class="flex items-center w-full border-b-2 border-neutral-800 border-opacity-100 py-2">
+                        <i class='bx bx-text mr-2'></i>
+                        Text
+                    </li>
+                </button>
+                <button class="grow" onclick="handler.chooseFigure('image')">
+                    <li
+                        class="flex items-center w-full border-b-2 border-neutral-800 border-opacity-100 py-2">
+                        <i class='bx bx-image mr-2'></i>
+                        Image
+                    </li>
+                </button>
             </ul>
         </div>
-        <div id="the-canvas" class="bg-[#040404] flex-grow h-full flex flex-col relative">
+        <div id="the-canvas" class="overflow-hidden bg-[#040404] flex-grow h-full flex flex-col relative">
             <!-- The Canvas -->
             <ul class="flex list-none flex-row flex-wrap border-b-0 pl-0">
-                <li role="presentation" te-nav-active>
-                    <a id="user-name" class="block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium uppercase leading-tight hover:isolate hover:border-transparent hover:bg-gray-900  border-primary text-blue-400">Hello, New User</a>
+                <li role="presentation" class="grow" te-nav-active>
+                    <a id="user-name" class="block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3 pt-6 text-xl font-medium leading-tight hover:isolate hover:border-transparent hover:bg-gray-900  border-primary text-blue-400">Hello, New User</a>
                 </li>
             </ul>
 
             <div id="chart-template" class="flex-grow relative">
-                <div style="pointer-events: node;" class="absolute top-0 left-0 w-full h-full"
+                <div class="absolute top-0 left-0 w-full h-full"
                     style="filter: contrast(0.8); 
                         background-image: url('./assets/bg.jpeg');
                         background-size: 5em;">
@@ -197,12 +199,20 @@
         }
         
         .sidebar-timeline-item h4 { font-size: 1.35em; font-size: 1em; font-weight: 600; }
-        .sidebar-timeline-item p { font-size: 0.85em; opacity: 0.75; margin-top: 0.5em; margin-bottom: 0.5em; }
+        .sidebar-timeline-item p { font-size: 0.85em; color: rgba(255, 255, 255, 0.6); margin-top: 0.5em; margin-bottom: 0.5em; }
 
         .sidebar-timeline-item button:hover {
             transform: scale(1.1);
-            background-color: #5ea2f4 !important;
         }
+        
+        .sidebar-timeline-item[disabled="true"] {
+            pointer-events: none;
+        }
+        .sidebar-timeline-item[disabled="true"] button {
+            display: none;
+            background-color: #FFFFFF57 !important;
+        }
+
         .sidebar-timeline-item button {
             transition: 200ms cubic-bezier(0.46, 0.65, 0, 1.73);
             margin-top: 0.75em;
@@ -210,9 +220,11 @@
             display: block;
             padding: 0.5em;
             
-            background-color: rgba(255,255,255,0.05);
+            /* background-color: rgba(255,255,255,0.05); */
             border-radius: 0.5em;
             font-size: 0.85em;
+            color: white;
+            background-color: #5ea2f4 !important;
         }
     </style>
 </body>

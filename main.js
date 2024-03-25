@@ -100,22 +100,16 @@
 
     let createChartStagesUI = [...document.querySelectorAll('.sidebar-timeline-item')]
         .sort((a, b) => a.getAttribute('order') - b.getAttribute('order'))
+
     const setActiveChartStageUIUntil = (index) => createChartStagesUI.forEach(element => {
         const order = parseInt(element.getAttribute('order'))
         if (!order) return
-        if (order == index) {
-            element.style.opacity = 1
-            element.style.pointerEvents = 'unset'
-        } else {
-            element.style.opacity = 0.2
-            element.style.pointerEvents = 'none'
-        }
+        element.setAttribute('disabled', (order == index) ? 'false' : 'true')
     })
 
     // On App Bootup
     // Delay all initial bootup functions to ensure that everything is prepared
     setTimeout(() => {
-
         // 1. Correctly configure the UI
         setActiveChartStageUIUntil(1)
 
