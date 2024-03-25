@@ -1,6 +1,8 @@
 const ERROR_SCHEMA = 'Schema Error'
 const ERROR_INVALID_CHARTTYPE = 'No valid chartType passed'
 
+const DIMENTIONS = 1000
+
 ;(function() {
     const moduleName = 'generator'
     window[moduleName] = {}
@@ -99,29 +101,27 @@ const ERROR_INVALID_CHARTTYPE = 'No valid chartType passed'
             ) throw new Error(ERROR_SCHEMA)
 
             // Declare the chart dimensions and margins.
-            const width = 500
-            const height = 500
             const marginTop = 30
             const marginRight = 0
             const marginBottom = 30
-            const marginLeft = 40
+            const marginLeft = 60
 
             // Declare the x (horizontal position) scale.
             const x = d3.scaleBand()
                 .domain(d3.groupSort(data, ([d]) => -d.value, (d) => d.key)) // descending frequency
-                .range([marginLeft, width - marginRight])
+                .range([marginLeft, DIMENTIONS - marginRight])
                 .padding(0.1)
             
             // Declare the y (vertical position) scale.
             const y = d3.scaleLinear()
                 .domain([0, d3.max(data, (d) => d.value)])
-                .range([height - marginBottom, marginTop])
+                .range([DIMENTIONS - marginBottom, marginTop])
 
             // Create the SVG container.
             const svg = d3.create("svg")
-                .attr("width", width)
-                .attr("height", height)
-                .attr("viewBox", [0, 0, width, height])
+                .attr("width", DIMENTIONS)
+                .attr("height", DIMENTIONS)
+                .attr("viewBox", [0, 0, DIMENTIONS, DIMENTIONS])
                 .attr("style", "max-width: 100%; height: auto;")
 
             // Add a rect for each bar.
@@ -137,20 +137,14 @@ const ERROR_INVALID_CHARTTYPE = 'No valid chartType passed'
 
             // Add the x-axis and label.
             svg.append("g")
-                .attr("transform", `translate(0,${height - marginBottom})`)
+                .attr("transform", `translate(0,${DIMENTIONS - marginBottom})`)
                 .call(d3.axisBottom(x).tickSizeOuter(0))
 
             // Add the y-axis and label, and remove the domain line.
             svg.append("g")
                 .attr("transform", `translate(${marginLeft},0)`)
-                .call(d3.axisLeft(y).tickFormat((y) => (y * 100).toFixed()))
+                .call(d3.axisLeft(y).ticks(6).tickFormat((y) => (y * 100).toFixed()))
                 .call(g => g.select(".domain").remove())
-                .call(g => g.append("text")
-                    .attr("x", -marginLeft)
-                    .attr("y", 10)
-                    .attr("fill", "currentColor")
-                    .attr("text-anchor", "start")
-                    .text("Value (%)"))
 
             // Return the SVG element.
             return svg.node()
@@ -169,9 +163,7 @@ const ERROR_INVALID_CHARTTYPE = 'No valid chartType passed'
             ) throw new Error(ERROR_SCHEMA)
             
             // Declare the chart dimensions and margins.
-            const width = 500
-            const height = Math.min(width, 500)
-            const radius = Math.min(width, height) / 2
+            const radius = DIMENTIONS / 2
 
             // Declare pie components
             const arc = d3.arc()
@@ -189,9 +181,9 @@ const ERROR_INVALID_CHARTTYPE = 'No valid chartType passed'
 
             // Generate the SVG
             const svg = d3.create("svg")
-                .attr("width", width)
-                .attr("height", height)
-                .attr("viewBox", [-width / 2, -height / 2, width, height])
+                .attr("width", DIMENTIONS)
+                .attr("height", DIMENTIONS)
+                .attr("viewBox", [-DIMENTIONS / 2, -DIMENTIONS / 2, DIMENTIONS, DIMENTIONS])
                 .attr("style", "max-width: 100%; height: auto;")
 
             svg.append("g")
@@ -238,18 +230,16 @@ const ERROR_INVALID_CHARTTYPE = 'No valid chartType passed'
             ) throw new Error(ERROR_SCHEMA)
 
             // Declare the chart dimensions and margins.
-            const width = 500
-            const height = 400
-            const marginTop = 20
-            const marginRight = 35
-            const marginBottom = 30
-            const marginLeft = 40
+            const marginTop = 35
+            const marginRight = 20
+            const marginBottom = 45
+            const marginLeft = 60
 
             // Declare the x (horizontal position) scale.
-            const x = d3.scaleUtc(d3.extent(data, d => new Date(d.date)), [marginLeft, width - marginRight]);
+            const x = d3.scaleUtc(d3.extent(data, d => new Date(d.date)), [marginLeft, DIMENTIONS - marginRight]);
 
             // Declare the y (vertical position) scale.
-            const y = d3.scaleLinear([0, d3.max(data, d => d.value)], [height - marginBottom, marginTop]);
+            const y = d3.scaleLinear([0, d3.max(data, d => d.value)], [DIMENTIONS - marginBottom, marginTop]);
 
             // Declare the line generator.
             const line = d3.line()
@@ -258,30 +248,24 @@ const ERROR_INVALID_CHARTTYPE = 'No valid chartType passed'
 
             // Create the SVG container.
             const svg = d3.create("svg")
-                .attr("width", width)
-                .attr("height", height)
-                .attr("viewBox", [0, 0, width, height])
+                .attr("width", DIMENTIONS)
+                .attr("height", DIMENTIONS)
+                .attr("viewBox", [0, 0, DIMENTIONS, DIMENTIONS])
                 .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
 
             // Add the x-axis.
             svg.append("g")
-                .attr("transform", `translate(0,${height - marginBottom})`)
-                .call(d3.axisBottom(x).ticks(width / 80).tickSizeOuter(0));
+                .attr("transform", `translate(0,${DIMENTIONS - marginBottom})`)
+                .call(d3.axisBottom(x).ticks(DIMENTIONS / 120).tickSizeOuter(0));
 
             // Add the y-axis, remove the domain line, add grid lines and a label.
             svg.append("g")
                 .attr("transform", `translate(${marginLeft},0)`)
-                .call(d3.axisLeft(y).ticks(height / 40))
+                .call(d3.axisLeft(y).ticks(DIMENTIONS / 80))
                 .call(g => g.select(".domain").remove())
                 .call(g => g.selectAll(".tick line").clone()
-                    .attr("x2", width - marginLeft - marginRight)
+                    .attr("x2", DIMENTIONS - marginLeft - marginRight)
                     .attr("stroke-opacity", 0.1))
-                .call(g => g.append("text")
-                    .attr("x", -marginLeft)
-                    .attr("y", 10)
-                    .attr("fill", "currentColor")
-                    .attr("text-anchor", "start")
-                    .text("Value"));
 
             // Append a path for the line.
             svg.append("path")

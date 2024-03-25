@@ -29,8 +29,8 @@
 
         wrapper.id = id
         wrapper.classList.add('select-none')
+        wrapper.classList.add('w-[350px]')
         wrapper.classList.add('z-8')
-        wrapper.classList.add('w-64')
         wrapper.classList.add('absolute')
         wrapper.classList.add('__can-drag')
         wrapper.classList.add('cursor-grab')
