@@ -53,6 +53,14 @@
         dragNode.style.left = targetX
         dragNode.style.top = targetY
     }
+    const escaped = () => {
+        if (!dragNode) return
+
+        dragNode.style.left = nodeStartX + 'px'
+        dragNode.style.top = nodeStartY + 'px'
+
+        resetDragState()
+    }
     const release = (event) => {
         const hasMouseMoved = 
             (targetX != null && targetY != null)
@@ -72,6 +80,9 @@
             event.stopImmediatePropagation()
         }
 
+        resetDragState()
+    }
+    const resetDragState = () => {
         dragNode = null
         dragStartX = null
         dragStartY = null
@@ -83,6 +94,7 @@
 
     canvasElement.addEventListener('mousedown', mousedown)
     canvasElement.addEventListener('mousemove', mousemove)
+    canvasElement.addEventListener('mouseleave', escaped)
     
     document.addEventListener('mouseup', release)
 })()
