@@ -88,10 +88,7 @@
 
         workspace.setStorageItemAttrs(
             id, 
-            {
-                size: { w: 64, h: 12 },
-                position: { x: 0, y: 0 },
-            },
+            { position: { x: 0, y: 0 } },
             true
         )
 
@@ -126,7 +123,11 @@
         }
 
         // 3. Load from storage
-        workspace.fetchStorage()
+        try {
+            workspace.fetchStorage()
+        } catch(error) {
+            errors.displayAndThrow(error)
+        }
     }, 10)
 
     // Define functions
@@ -254,13 +255,16 @@
     Object.defineProperty(window[moduleName], 'confirmChart', {
         writable: false,
         value: () => {
-            generatorResponse = generator.generate(newChartTypeKey, mostRecentUpload)
-            if (generatorResponse instanceof Error) return console.error(generatorResponse)
-
-            draggableWrapper = makeDraggerWrappable()
-            generatorResponse(draggableWrapper)
-
-            setActiveChartStageUIUntil(1)
+            try {
+                generatorResponse = generator.generate(newChartTypeKey, mostRecentUpload)
+                draggableWrapper = makeDraggerWrappable()
+                generatorResponse(draggableWrapper)
+    
+                setActiveChartStageUIUntil(1)    
+            } catch(error) {
+                setActiveChartStageUIUntil(1)
+                return errors.displayAndThrow(error)
+            }
         }
     })
 

@@ -25,7 +25,7 @@ let isInitingStorage = false
             items = itemsObject || {}
         } catch(error) {
             items = {}
-            console.info('Something went wrong while fetching your storage!')
+            throw error // Propegate the error handling
         }
     }
     const setStorage = () => {

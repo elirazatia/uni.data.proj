@@ -1,4 +1,4 @@
-const ERROR_SCHEMA = 'Schema Error'
+const ERROR_SCHEMA = 'Schema Error - You have provided an incorrect data format'
 const ERROR_INVALID_CHARTTYPE = 'No valid chartType passed'
 
 const DIMENTIONS = 1000
@@ -8,15 +8,9 @@ const DIMENTIONS = 1000
     window[moduleName] = {}
 
     const charts = {
-        'bar': {
-            call: (data) => generator.generateBarChart(data),
-        },
-        'donut': {
-            call: (data) => generator.generateDonutChart(data),
-        },
-        'line': {
-            call: (data) => generator.generateLineChart(data),
-        },
+        'bar': { call: (data) => generator.generateBarChart(data) },
+        'donut': { call: (data) => generator.generateDonutChart(data) },
+        'line': { call: (data) => generator.generateLineChart(data) },
     }
 
     // Utility
@@ -44,11 +38,7 @@ const DIMENTIONS = 1000
             rawData = existingConfigure?.rawData || rawData
 
             if (!isValid(chartType)) return new Error(ERROR_INVALID_CHARTTYPE)
-            try {
-                node = charts[chartType].call(rawData)
-            } catch(resultingError) { error = resultingError; console.error('Generating chart resulted in error: ', resultingError) }
-            if (!node) error = new Error(ERROR_INVALID_CHARTTYPE)
-            if (error) return error
+            node = charts[chartType].call(rawData)
 
             return makeAppendingCallback(
                 node,

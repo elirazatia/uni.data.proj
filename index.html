@@ -12,6 +12,7 @@
     <script defer src="main.js"></script>
     <script defer src="scripts/generator.js"></script>
     <script defer src="scripts/highlight.js"></script>
+    <script defer src="scripts/errors.js"></script>
     <script defer src="scripts/json.js"></script>
     <script defer src="scripts/drag.js"></script>
 
@@ -117,6 +118,8 @@
             </div>
 
             <div class="flex-grow"></div>
+
+            <div class="flex-shrink my-3 overflow-y-scroll" id="error-container"></div>
 
             <ul class="w-full flex flex-col">
                 <button onclick="handler.chooseFigure('text')">
