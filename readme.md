@@ -24,6 +24,7 @@ Note that wrapping the elements in the correct classes and event handlers occurs
 `scripts/highlighter.js` - This file allows the user to draw on the canvas. By using a <canvas /> and a 2D context, a call to the mousedown will call context.moveTo() and context.lineTo()
 In order to persist the users pen across uses, all drawings are stored in an array of arrays. Where the main array consists of sub-arrays that include all the points (x, y) that should be drawn.
 `scripts/drag.js` - This contains no public methods, but rather attaches 4 event listeners to the #the-canvas element. Mousemove, down and release which when activated, use the transform methods on the dragged element. On release, this dispaches an event to the workspace.js file to persist the users interactions across events.
+
 ---
 ## Data Formats
 Incorrect data formats when importing a JSON file will result in a non-fatal error.
